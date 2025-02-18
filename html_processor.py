@@ -11,7 +11,9 @@ input_folder = 'input/'  # Folder for input HTML files
 output_folder = 'processed/'  # Folder for output CSV files
 
 # YouTube API details
+
 API_KEY = '[API key]'  # Replace with your actual API key
+API_KEY = '[api key]'  # Replace with your actual API key
 VIDEO_DETAILS_URL = 'https://www.googleapis.com/youtube/v3/videos'
 CATEGORY_DETAILS_URL = 'https://www.googleapis.com/youtube/v3/videoCategories'
 
@@ -130,3 +132,64 @@ def process_html(s3, bucket_name, file_key):
         print(f"Processed file saved to: {output_key}")
     except Exception as e:
         print(f"Error processing file {file_key}: {e}")
+
+    
+# Lambda handler
+# def lambda_handler(event, context):
+    # List all files in the input folder
+    # response = s3.list_objects_v2(Bucket=bucket_name, Prefix=input_folder)
+    # files = [obj['Key'] for obj in response.get('Contents', []) if obj['Key'].endswith('.html')]
+    
+    # for file_key in files:
+        # try:
+        #     print(f"Processing file: {file_key}")
+            
+        #     # Download the HTML file from S3
+        #     response = s3.get_object(Bucket=bucket_name, Key=file_key)
+        #     html_content = response['Body'].read().decode('utf-8')
+            
+        #     # Extract video watch data
+        #     video_watch_data = extract_video_data(html_content)
+
+        #     # List to store enriched video data
+        #     final_video_data = []
+
+        #     # Fetch details for each video
+        #     for video in video_watch_data[:20]:
+        #         video_id = video['video_id']
+        #         video_url = video['video_url']
+        #         watched_at = video['watched_at']
+
+        #         video_info = get_video_details(video_id)
+        #         if video_info is None or 'items' not in video_info or not video_info['items']:
+        #             continue  # Skip if video details are unavailable
+
+        #         video_item = video_info['items'][0]
+        #         snippet = video_item.get('snippet', {})
+        #         category_id = snippet.get('categoryId')
+        #         category_name = get_category_name(category_id) if category_id else None
+
+        #         # Append data to the final list
+        #         final_video_data.append({
+        #             'Video ID': video_id,
+        #             'Video Link': video_url,
+        #             'Title': snippet.get('title'),
+        #             'Description': snippet.get('description'),
+        #             'Category ID': category_id,
+        #             'Category': category_name,
+        #             'Watched At': watched_at
+        #         })
+
+        #     # Save the processed data to CSV
+        #     df = pd.DataFrame(final_video_data)
+        #     output_key = file_key.replace(input_folder, output_folder).replace('.html', '.csv')
+        #     buffer = io.StringIO()
+        #     df.to_csv(buffer, index=False)
+            
+        #     # Upload the CSV file back to S3
+        #     s3.put_object(Bucket=bucket_name, Key=output_key, Body=buffer.getvalue())
+        #     print(f"Processed file saved to: {output_key}")
+        # except Exception as e:
+        #     print(f"Error processing file {file_key}: {e}")
+ 
+
